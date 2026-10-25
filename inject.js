@@ -37,7 +37,7 @@
     kevlar_watch_grid: false,
     kevlar_watch_max_player_width: 1280,
     kevlar_watch_flexy_metadata_height: 136,
-    kevlar_watch_comments_ep_disable_theater: true,
+    kevlar_watch_comments_ep_disable_theater: false,
     kevlar_watch_comments_panel_button: false,
     small_avatars_for_comments: false,
     small_avatars_for_comments_ep: false,
@@ -137,11 +137,27 @@
     // Don't auto-click aggressively every tick — strip attrs is enough for CSS
   }
 
+  function syncTheaterPlayerSize() {
+    const flexy = document.querySelector("ytd-watch-flexy");
+    if (!flexy || !flexy.hasAttribute("theater") || flexy.hasAttribute("fullscreen")) return;
+    const masthead = 56;
+    const w = Math.max(window.innerWidth || 0, document.documentElement.clientWidth || 0);
+    const h = Math.min((w * 9) / 16, Math.max(240, window.innerHeight - masthead));
+    const player = document.querySelector("#movie_player");
+    try {
+      if (player && typeof player.setSize === "function") player.setSize(w, h);
+    } catch (_) {}
+    try {
+      if (player && typeof player.setInternalSize === "function") player.setInternalSize(w, h);
+    } catch (_) {}
+  }
+
   function applyAll() {
     applyFlags();
     stripPanelAttrs();
     closeCommentsPanel();
     document.documentElement.setAttribute("data-ycl-classic", "1");
+    syncTheaterPlayerSize();
   }
 
   applyAll();
@@ -150,16 +166,23 @@
   window.addEventListener("yt-navigate-finish", applyAll);
   window.addEventListener("yt-page-data-updated", applyAll);
   window.addEventListener("yt-page-type-changed", applyAll);
+  window.addEventListener("resize", syncTheaterPlayerSize);
 
   const mo = new MutationObserver(() => {
     const flexy = document.querySelector("ytd-watch-flexy");
     if (!flexy) return;
     if (STRIP_ATTRS.some((a) => flexy.hasAttribute(a))) stripPanelAttrs();
+    if (flexy.hasAttribute("theater")) syncTheaterPlayerSize();
   });
 
   function watchFlexy() {
     const flexy = document.querySelector("ytd-watch-flexy");
-    if (flexy) mo.observe(flexy, { attributes: true, attributeFilter: STRIP_ATTRS });
+    if (flexy) {
+      mo.observe(flexy, {
+        attributes: true,
+        attributeFilter: STRIP_ATTRS.concat(["theater", "fullscreen"]),
+      });
+    }
   }
   watchFlexy();
   document.addEventListener("DOMContentLoaded", watchFlexy, { once: true });
