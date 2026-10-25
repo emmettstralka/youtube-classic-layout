@@ -1,0 +1,127 @@
+/*
+ * Classic watch layout overrides for YouTube’s comments-panel redesign:
+ *   - Hide comments side rail / engagement panel chrome
+ *   - Keep related in #secondary and comments under the player
+ *   - Restore full-bleed theater
+ */
+
+/* ----- Kill the fixed comments / dismissible side-rail chrome ----- */
+
+/* Hide the thin right icon rail (Description / Comments / Ask) */
+html[data-ycl-classic] ytd-watch-flexy #panels.ytd-watch-flexy,
+html[data-ycl-classic] ytd-watch-flexy #side-rail,
+html[data-ycl-classic] ytd-watch-flexy ytd-watch-side-panel-renderer,
+html[data-ycl-classic] ytd-watch-flexy #chat-container:not(:has(#chat:not([hidden]))) {
+  /* keep chat when live; panels rail goes away */
+}
+
+html[data-ycl-classic] ytd-watch-flexy #panels.ytd-watch-flexy {
+  display: none !important;
+}
+
+/* Any leftover expanded comments engagement panel */
+html[data-ycl-classic] ytd-watch-flexy #secondary ytd-engagement-panel-section-list-renderer[visibility="ENGAGEMENT_PANEL_VISIBILITY_EXPANDED"],
+html[data-ycl-classic] ytd-watch-flexy #secondary-inner > ytd-engagement-panel-section-list-renderer {
+  display: none !important;
+}
+
+/* ----- Classic column geometry ----- */
+
+html[data-ycl-classic] ytd-watch-flexy[is-two-columns_] #columns.ytd-watch-flexy {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start !important;
+}
+
+html[data-ycl-classic] ytd-watch-flexy[is-two-columns_] #primary.ytd-watch-flexy {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+
+html[data-ycl-classic] ytd-watch-flexy[is-two-columns_] #secondary.ytd-watch-flexy {
+  display: block !important;
+  flex: 0 0 var(--ytd-watch-flexy-sidebar-width, 402px) !important;
+  width: var(--ytd-watch-flexy-sidebar-width, 402px) !important;
+  max-width: var(--ytd-watch-flexy-sidebar-width, 402px) !important;
+  min-width: var(--ytd-watch-flexy-sidebar-min-width, 300px) !important;
+  /* Experiment sets secondary to a full-bleed flex overlay — undo that */
+  position: static !important;
+  height: auto !important;
+  max-height: none !important;
+}
+
+html[data-ycl-classic] ytd-watch-flexy #secondary-inner.ytd-watch-flexy {
+  display: block !important;
+  width: 100% !important;
+  position: static !important;
+}
+
+/* ----- Comments under the video (not display:none in #below) ----- */
+
+html[data-ycl-classic] ytd-watch-flexy #below.ytd-watch-flexy {
+  display: block !important;
+  width: 100% !important;
+}
+
+html[data-ycl-classic] ytd-watch-flexy #below #comments,
+html[data-ycl-classic] ytd-watch-flexy #below ytd-comments#comments,
+html[data-ycl-classic] ytd-watch-flexy ytd-comments#comments {
+  display: block !important;
+  visibility: visible !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-top: 24px !important;
+  height: auto !important;
+}
+
+/* If related is still under #below (before JS moves it), don't let it look like the main column forever —
+   content.js relocates it; hide duplicates left behind */
+html[data-ycl-classic] ytd-watch-flexy #primary > #related {
+  display: none !important;
+}
+
+/* After restore, related lives in the sidebar */
+html[data-ycl-classic] ytd-watch-flexy #secondary #related,
+html[data-ycl-classic] ytd-watch-flexy #secondary-inner #related {
+  display: block !important;
+  width: 100% !important;
+}
+
+/* While related is still under #below (before move), keep page usable:
+   once moved, the below copy is gone. If both exist briefly, prefer sidebar. */
+html[data-ycl-restored] ytd-watch-flexy #below > #related,
+html[data-ycl-restored] ytd-watch-flexy #below #related {
+  display: none !important;
+}
+
+/* ----- Theater: undo disable_theater_mode leftovers ----- */
+
+html[data-ycl-classic] ytd-watch-flexy[theater] #full-bleed-container.ytd-watch-flexy,
+html[data-ycl-classic] ytd-watch-flexy[theater] #player-full-bleed-container {
+  width: 100% !important;
+  max-width: 100vw !important;
+  margin: 0 !important;
+  display: flex !important;
+  height: auto !important;
+  min-height: 240px !important;
+  max-height: calc(100vh - 56px) !important;
+}
+
+html[data-ycl-classic] ytd-watch-flexy[theater] #movie_player {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+html[data-ycl-classic] ytd-watch-flexy[theater][is-two-columns_] #columns.ytd-watch-flexy {
+  display: flex !important;
+  flex-direction: row !important;
+}
+
+html[data-ycl-classic] ytd-watch-flexy[theater][is-two-columns_] #secondary.ytd-watch-flexy {
+  display: block !important;
+}
+
+/* Show theater control even when experiment tries to hide size button */
+html[data-ycl-classic] .ytp-size-button {
+  display: inline-flex !important;
+}

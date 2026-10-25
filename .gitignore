@@ -1,0 +1,7 @@
+.DS_Store
+*.pem
+*.der
+*.crx
+*.zip
+extension_id.txt
+reference/

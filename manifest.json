@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Classic Layout",
+  "version": "1.3.0",
+  "description": "Restores the classic YouTube watch layout: comments under the video, related videos in the sidebar, and full-bleed theater mode.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "YouTube Classic Layout (on)",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://www.youtube.com/*",
+        "*://youtube.com/*",
+        "*://m.youtube.com/*"
+      ],
+      "js": [
+        "inject.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "*://www.youtube.com/*",
+        "*://youtube.com/*",
+        "*://m.youtube.com/*"
+      ],
+      "css": [
+        "classic.css"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxg/Rqu7vEuK+HYbigzYuAiyje6waAGERzuTxQ4CNQh9fpD0ZSlKyHpG4v4WW/4n2G2tndTD8RHXTo6kCV1ohY5g5KgJbIfqlIZIP5pkBcZKCKBk9IBcf8VsBXrKDuSkU7oANnoFV/xaOlH3XEpslj8ZeFPmkfLfJXiABFyy6JAB5fmlmFOXRhODkKhSpFeE6Uo2luRRJIFZxTv2eGY+TA7yMo0SwtlhNqUqgHPtktAaKOXV9kVCIkt7mUqryWzvryxLnJVV0rprtNfh77ZSm3wbj/Iv9w0n+trXO9IfWvq33l0jyR4OpCmAGZOG3wqX9HPvonBiPLmYvIpKFpwydiQIDAQAB"
+}
